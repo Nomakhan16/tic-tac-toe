@@ -9,7 +9,7 @@ const server = http.createServer(app);
 
 // ✅ Enable CORS globally for HTTP routes
 app.use(cors({
-  origin: "https://tic-tac-toe-alpha-two-zzscv28qkn.vercel.app", // 🔒 No trailing slash
+  origin: "*", // 🔒 No trailing slash
   methods: ["GET", "POST"]
 }));
 
@@ -18,7 +18,7 @@ app.use(express.static(path.join(__dirname)));
 
 const io = new Server(server, {
   cors: {
-    origin: "https://tic-tac-toe-alpha-two-zzscv28qkn.vercel.app", // 🔒 Match frontend exactly
+    origin: "*", // 🔒 Match frontend exactly
     methods: ["GET", "POST"]
   }
 });
