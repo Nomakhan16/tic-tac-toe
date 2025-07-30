@@ -1,23 +1,31 @@
 const express = require("express");
 const http = require("http");
 const path = require("path");
+const cors = require("cors");
 const { Server } = require("socket.io");
 
 const app = express();
 const server = http.createServer(app);
+
+// ✅ Enable CORS globally for HTTP routes
+app.use(cors({
+  origin: "https://tic-tac-toe-alpha-two-zzscv28qkn.vercel.app", // 🔒 No trailing slash
+  methods: ["GET", "POST"]
+}));
+
+// ✅ Serve static files from root folder
+app.use(express.static(path.join(__dirname)));
+
 const io = new Server(server, {
   cors: {
-    origin: "*", // ✅ Needed for cross-origin access from Vercel frontend
+    origin: "https://tic-tac-toe-alpha-two-zzscv28qkn.vercel.app", // 🔒 Match frontend exactly
     methods: ["GET", "POST"]
   }
 });
 
 const PORT = process.env.PORT || 3000;
 
-// ✅ Serve static files from root folder
-app.use(express.static(path.join(__dirname)));
-
-// 🧠 In-memory room data (board state)
+// 🧠 In-memory room data
 const rooms = {};
 
 io.on("connection", (socket) => {
@@ -27,12 +35,10 @@ io.on("connection", (socket) => {
     socket.join(roomCode);
     console.log(`👥 ${socket.id} joined room: ${roomCode}`);
 
-    // Initialize board if not present
     if (!rooms[roomCode]) {
       rooms[roomCode] = Array(9).fill("");
     }
 
-    // Emit board state to all clients in room
     io.to(roomCode).emit("updateBoard", rooms[roomCode]);
   });
 
