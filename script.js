@@ -1,3 +1,6 @@
+// Initialize socket
+const socket = io();
+
 // Select elements
 let btnRef = document.querySelectorAll(".button-option");
 let popupRef = document.querySelector(".popup");
@@ -27,13 +30,11 @@ let winningPattern = [
   [0, 4, 8], [2, 4, 6]
 ];
 
-// Disable buttons and show popup
 const disableButtons = () => {
   btnRef.forEach((element) => (element.disabled = true));
   popupRef.classList.remove("hide");
 };
 
-// Enable buttons and reset grid
 const enableButtons = () => {
   btnRef.forEach((element) => {
     element.innerText = "";
@@ -47,7 +48,6 @@ const enableButtons = () => {
   currentPlayer = "X";
 };
 
-// Win handler
 const winFunction = (letter) => {
   disableButtons();
   const winnerName = letter === "X" ? player1 : player2;
@@ -59,13 +59,11 @@ const winFunction = (letter) => {
   }
 };
 
-// Draw handler
 const drawFunction = () => {
   disableButtons();
   msgRef.innerHTML = `<span class='winner-text'>It's a Draw</span>`;
 };
 
-// Check for winner
 const winChecker = () => {
   for (let pattern of winningPattern) {
     let [a, b, c] = pattern;
@@ -81,7 +79,6 @@ const winChecker = () => {
   return false;
 };
 
-// AI move logic
 const makeAIMove = () => {
   let emptyCells = [];
   btnRef.forEach((btn, index) => {
@@ -99,7 +96,6 @@ const makeAIMove = () => {
   }, 500);
 };
 
-// Button click logic
 btnRef.forEach((element, index) => {
   element.addEventListener("click", () => {
     if (element.innerText !== "") return;
@@ -112,16 +108,21 @@ btnRef.forEach((element, index) => {
       xTurn = !xTurn;
       if (isAI && !xTurn) makeAIMove();
     }
+
+    // Multiplayer move broadcast (optional, if server supports it)
+    if (!isAI && roomCode) {
+      socket.emit("moveMade", {
+        room: roomCode,
+        index,
+        value: element.innerText
+      });
+    }
   });
 });
 
-// Restart game
 restartBtn.addEventListener("click", () => enableButtons());
-
-// New game
 newgameBtn.addEventListener("click", () => enableButtons());
 
-// Start standard 2-player game
 startGameBtn.addEventListener("click", () => {
   player1 = player1Input.value || "Player X";
   player2 = player2Input.value || "Player O";
@@ -129,7 +130,6 @@ startGameBtn.addEventListener("click", () => {
   enableButtons();
 });
 
-// Start game vs AI
 playVsAIBtn.addEventListener("click", () => {
   player1 = player1Input.value || "Player";
   player2 = "Computer";
@@ -137,11 +137,33 @@ playVsAIBtn.addEventListener("click", () => {
   enableButtons();
 });
 
-// Invite friend feature (mock room code)
 inviteBtn.addEventListener("click", () => {
   roomCode = Math.random().toString(36).substring(2, 8).toUpperCase();
   roomCodeDisplay.textContent = `Room Code: ${roomCode} (share this with a friend)`;
+  socket.emit("createRoom", roomCode);
 });
 
-// Initialize game
+roomCodeDisplay.addEventListener("click", () => {
+  const inputCode = prompt("Enter Room Code to Join:");
+  if (!inputCode) return;
+  roomCode = inputCode.toUpperCase();
+  socket.emit("joinRoom", roomCode);
+});
+
+// Socket event listeners
+socket.on("playerJoined", ({ id }) => {
+  msgRef.innerHTML = `<span class='winner-text'>Player joined! Ready to play</span>`;
+});
+
+socket.on("moveMade", ({ index, value }) => {
+  if (btnRef[index].innerText === "") {
+    btnRef[index].innerText = value;
+    btnRef[index].disabled = true;
+    count++;
+    if (!winChecker() && count === 9) drawFunction();
+    xTurn = value === "X";
+  }
+});
+
+// Initialize
 window.onload = enableButtons;

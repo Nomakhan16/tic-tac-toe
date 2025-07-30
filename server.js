@@ -1,34 +1,43 @@
 const express = require("express");
+const http = require("http");
 const path = require("path");
+const { Server } = require("socket.io");
+
 const app = express();
-const http = require("http").createServer(app);
-const io = require("socket.io")(http);
+const server = http.createServer(app);
+const io = new Server(server, {
+  cors: {
+    origin: "*", // ✅ Needed for cross-origin access from Vercel frontend
+    methods: ["GET", "POST"]
+  }
+});
+
 const PORT = process.env.PORT || 3000;
 
-// Serve all files directly from root folder
-app.use(express.static(__dirname));
+// ✅ Serve static files from root folder
+app.use(express.static(path.join(__dirname)));
 
-// Room data storage (board state per room)
-let rooms = {};
+// 🧠 In-memory room data (board state)
+const rooms = {};
 
 io.on("connection", (socket) => {
-  console.log("🟢 A user connected");
+  console.log("🟢 User connected:", socket.id);
 
   socket.on("joinRoom", (roomCode) => {
     socket.join(roomCode);
-    console.log(`User joined room: ${roomCode}`);
+    console.log(`👥 ${socket.id} joined room: ${roomCode}`);
 
-    // Initialize room if not exists
+    // Initialize board if not present
     if (!rooms[roomCode]) {
       rooms[roomCode] = Array(9).fill("");
     }
 
-    // Emit board state to this room
+    // Emit board state to all clients in room
     io.to(roomCode).emit("updateBoard", rooms[roomCode]);
   });
 
   socket.on("playMove", ({ room, index, symbol }) => {
-    if (rooms[room]) {
+    if (rooms[room] && rooms[room][index] === "") {
       rooms[room][index] = symbol;
       io.to(room).emit("updateBoard", rooms[room]);
     }
@@ -40,11 +49,10 @@ io.on("connection", (socket) => {
   });
 
   socket.on("disconnect", () => {
-    console.log("🔴 A user disconnected");
+    console.log("🔴 User disconnected:", socket.id);
   });
 });
 
-// Start the server
-http.listen(PORT, () => {
-  console.log(`🚀 Server running at http://localhost:${PORT}`);
+server.listen(PORT, () => {
+  console.log(`🚀 Server running on port ${PORT}`);
 });
