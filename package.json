@@ -1,0 +1,15 @@
+{
+  "name": "tic-tac-toe",
+  "version": "1.0.0",
+  "description": "Welcome to the **Tic Tac Toe Game**! This is a feature-rich, beautifully styled, and intelligent version of the classic game. You can either play against a smart computer or challenge a friend locally. Designed with a light blue and pink gradient theme, this version enhances both visual appeal and gameplay.",
+  "main": "script.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "serve": "^14.2.4"
+  }
+}
