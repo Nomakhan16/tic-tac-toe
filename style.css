@@ -1,146 +1,85 @@
-* {
-  padding: 0;
-  margin: 0;
-  box-sizing: border-box;
-  font-family: "Raleway", sans-serif;
-}
 body {
-  height: 100vh;
-  background: linear-gradient(135deg, #a8edea, #fed6e3);
-}
-html {
-  font-size: 16px;
-}
-.wrapper {
-  position: absolute;
-  transform: translate(-50%, -50%);
-  top: 50%;
-  left: 50%;
-  text-align: center;
-}
-
-/* ⬅️ Setup Section for Inputs and Buttons */
-.setup {
-  margin-bottom: 1.5em;
-}
-.setup input[type="text"] {
-  padding: 0.5em 0.8em;
-  margin: 0.5em;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  font-size: 1em;
-  background-color: #fff;
-  width: 180px;
-  max-width: 80%;
-}
-.setup button {
-  padding: 0.6em 1em;
-  margin: 0.5em;
-  font-size: 0.9em;
-  border: none;
-  border-radius: 6px;
-  background-color: #00bcd4;
-  color: #fff;
-  cursor: pointer;
-  box-shadow: 0 3px 6px rgba(0, 188, 212, 0.3);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-.setup button:hover {
-  transform: scale(1.05);
-  box-shadow: 0 5px 10px rgba(0, 188, 212, 0.4);
-}
-#room-code {
-  font-size: 0.85em;
-  color: #333;
-  margin-top: 0.5em;
-}
-
-/* 🎯 Game Board */
-.container {
-  width: 70vmin;
-  height: 70vmin;
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(to right, #c2e9fb, #fbc2eb);
   display: flex;
-  flex-wrap: wrap;
-  gap: 2vmin;
-  margin: 0 auto;
-}
-.button-option {
-  background: #ffffff;
-  height: 22vmin;
-  width: 22vmin;
-  border: none;
-  border-radius: 8px;
-  font-size: 12vmin;
-  color: #00bcd4;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-}
-
-/* 🔁 Restart Button */
-#restart {
-  font-size: 1.3em;
-  padding: 1em;
-  border-radius: 8px;
-  background-color: #0a0027;
-  color: #ffffff;
-  border: none;
-  position: relative;
-  margin: 1.5em auto 0 auto;
-  display: block;
-  width: fit-content;
-}
-
-/* 🎉 Popup Styles */
-.popup {
-  background: linear-gradient(135deg, #a8edea, #fed6e3);
-  height: 100%;
-  width: 100%;
-  position: absolute;
-  display: flex;
-  z-index: 2;
   align-items: center;
   justify-content: center;
+  height: 100vh;
   flex-direction: column;
-  gap: 1em;
-  font-size: 12vmin;
 }
-.popup.hide {
+
+h1, h2 {
+  color: #333;
+  text-align: center;
+}
+
+button {
+  background-color: #8a7eea;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  font-size: 16px;
+  margin: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+button:hover {
+  background-color: #6b60c6;
+}
+
+input {
+  padding: 10px;
+  margin: 8px;
+  border: 2px solid #ccc;
+  border-radius: 6px;
+  font-size: 16px;
+}
+
+.board {
+  display: grid;
+  grid-template-columns: repeat(3, 110px);
+  grid-template-rows: repeat(3, 110px);
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.cell {
+  background-color: #ffe0eb;
+  border: 2px solid #aaa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40px;
+  font-weight: bold;
+  border-radius: 12px;
+  cursor: pointer;
+  color: #5e2b97;
+  transition: background-color 0.3s;
+}
+
+.cell:hover {
+  background-color: #ffcadb;
+}
+
+.game-container {
+  text-align: center;
+}
+
+#winnerScreen {
+  position: absolute;
+  top: 30%;
+  text-align: center;
+  background: transparent;
+}
+
+.hidden {
   display: none;
 }
-#message {
-  color:#00bcd4;
+
+.mode-selection {
   text-align: center;
-  font-size: 1em;
-}
-
-/* 🆕 New Game Button */
-#new-game {
-  font-size: 0.80em;
-  padding: 0.6em 1.1em;
-  background-color: #00bcd4;
-  color: #ffffff;
-  border-radius: 10px;
-  border: none;
-  box-shadow: 0 3px 6px rgba(0, 188, 212, 0.3);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  cursor: pointer;
-}
-#new-game:hover {
-  transform: scale(1.05);
-  box-shadow: 0 5px 10px rgba(0, 188, 212, 0.4);
-}
-
-/* 🏆 Winner Animation */
-.winner-text {
-  color: #00bcd4;
-  font-size: 1em;
-  font-weight: bold;
-  animation: bounce 0.8s ease-in-out infinite alternate;
-}
-@keyframes bounce {
-  from {
-    transform: translateY(0);
-  }
-  to {
-    transform: translateY(-10px);
-  }
 }

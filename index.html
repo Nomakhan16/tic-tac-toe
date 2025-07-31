@@ -1,60 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tic Tac Toe</title>
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@700&display=swap" rel="stylesheet">
-    <!-- Stylesheet -->
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Tic Tac Toe</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-   <div class="wrapper">
-       <!-- Game Setup Options -->
-       <div class="setup">
-           <input type="text" id="player1-name" placeholder="Enter Player 1 Name" />
-           <input type="text" id="player2-name" placeholder="Enter Player 2 Name" />
-           <button id="start-game">Start Game</button>
-           <button id="play-vs-ai">Play vs Computer</button>
-           <button id="invite-friend">Invite Friend</button>
-           <p id="room-code"></p>
-           <!-- Join Game Additions -->
-           <input type="text" id="join-room-code" placeholder="Enter Room Code to Join" />
-           <button id="join-game">Join Game</button>
-       </div>
-
-       <!-- Game Board -->
-       <div class="container">
-           <button class="button-option"></button>
-           <button class="button-option"></button>
-           <button class="button-option"></button>
-           <button class="button-option"></button>
-           <button class="button-option"></button>
-           <button class="button-option"></button>
-           <button class="button-option"></button>
-           <button class="button-option"></button>
-           <button class="button-option"></button>
-       </div>
-
-       <!-- Restart Button -->
-       <button id="restart">Restart</button>
-   </div>
-
-   <!-- Popup Message -->
-   <div class="popup hide">
-       <p id="message">Sample Message</p>
-       <button id="new-game">New Game</button>
-   </div>
-
-    <!-- Confetti -->
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-   <!-- Socket.IO client from CDN -->
-   <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
-
-<!-- Your game logic -->
-<script src="script.js"></script>
-
+  <div class="mode-selection">
+    <h1>Select Game Mode</h1>
+    <button onclick="selectMode('computer')">Play with Computer</button>
+    <button onclick="selectMode('friend')">Play with Friend</button>
     
+    <div id="nameInputs" class="hidden">
+      <input type="text" id="player1" placeholder="Your Name">
+      <input type="text" id="player2" placeholder="Friend's Name" class="hidden">
+      <button onclick="startGame()">Start Game</button>
+    </div>
+  </div>
 
+  <div class="game-container hidden">
+    <h2 id="turnIndicator"></h2>
+    <div class="board" id="board">
+      <!-- 9 cells -->
+      <div class="cell" onclick="makeMove(0)"></div>
+      <div class="cell" onclick="makeMove(1)"></div>
+      <div class="cell" onclick="makeMove(2)"></div>
+      <div class="cell" onclick="makeMove(3)"></div>
+      <div class="cell" onclick="makeMove(4)"></div>
+      <div class="cell" onclick="makeMove(5)"></div>
+      <div class="cell" onclick="makeMove(6)"></div>
+      <div class="cell" onclick="makeMove(7)"></div>
+      <div class="cell" onclick="makeMove(8)"></div>
+    </div>
+    <button onclick="restartGame()" class="restart">Restart</button>
+  </div>
+
+  <div id="winnerScreen" class="hidden">
+    <h1 id="winnerMessage"></h1>
+    <button onclick="restartGame()" class="restart">Play Again</button>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
